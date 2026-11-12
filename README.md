@@ -15,7 +15,7 @@ Proyecto desarrollado para la cátedra de **Sistemas Distribuidos** (8vo Semestr
 
 ---
 
-## 🛠️ Tecnologías Utilizadas
+## Tecnologías Utilizadas
 
 - **Lenguaje**: Python 3.10+
 - **Framework Web**: Django 5.1.1
@@ -27,7 +27,7 @@ Proyecto desarrollado para la cátedra de **Sistemas Distribuidos** (8vo Semestr
 
 ---
 
-## 📋 Endpoints de la API
+## Endpoints de la API
 
 | Método | Endpoint | Descripción |
 | :--- | :--- | :--- |
