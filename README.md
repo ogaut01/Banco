@@ -82,4 +82,4 @@ Accede a la aplicación en [http://127.0.0.1:8000](http://127.0.0.1:8000).
 ---
 
 ## 👥 Colaboradores
-Proyecto académico desarrollado de forma colaborativa para la carrera de Ingeniería Informática.
+Proyecto de curso desarrollado de forma colaborativa con los compañeros para la asignatura de Sistemas Distribuidos.
