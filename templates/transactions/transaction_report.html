@@ -1,0 +1,115 @@
+{% extends 'core/base.html' %}
+{% load humanize %}
+{% block head_title %}Transaction Report{% endblock %}
+{% block head_extra %}
+<script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+{% endblock %}
+{% block content %}
+<div class="my-6 py-3 px-4 bg-white rounded-xl shadow-md">
+    <h1 class="font-bold text-3xl text-center pb-2 pt-2 text-yellow-500">Detalles de depósitos y retiros</h1>
+    <hr />
+    <form method="get" id="filter">
+        {% if form.daterange.errors %}
+        {% for error in form.daterange.errors %}
+        <p class="text-red-600 text-sm italic">{{ error }}</p>
+        {% endfor %}
+        {% endif %}
+    </form>
+
+    <div class="mt-4 py-3 px-4 bg-white rounded-xl shadow-md" id="transactions-container">
+        <!-- Aquí se insertarán las tarjetas dinámicamente -->
+    </div>
+</div>
+{% endblock %}
+
+{% block footer_extra %}
+<script type="text/javascript">
+    function getCookie(name) {
+        var value = "; " + document.cookie;
+        var parts = value.split("; " + name + "=");
+        if (parts.length === 2) return parts.pop().split(";").shift();
+    }
+
+    function formatTimestamp(timestamp) {
+        return new Date(timestamp).toLocaleString('es', {
+            month: 'long',
+            day: 'numeric',
+            year: 'numeric',
+            hour: 'numeric',
+            minute: 'numeric',
+            second: 'numeric',
+            hour12: true
+        });
+    }
+
+    $(function () {
+        var accessToken = getCookie('access_token');
+        $.ajax({
+            url: '/api/api-list/',
+            type: 'GET',
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader('Authorization', 'Bearer ' + accessToken);
+            },
+            success: function (data) {
+                $.each(data, function (index, api) {
+                    if (api.name === "{{ request.user.account.idBank }}".toLocaleUpperCase()) {
+                        loadCardData(api.url);
+                    }
+                });
+            },
+            error: function (error) {
+                console.error('Error al obtener la lista de APIs:', error);
+            }
+        });
+
+        window.loadCardData = function (apiUrl) {
+            const urls = apiUrl.split('|');
+            const tableApiUrl = urls[0].trim();
+            const balanceApiUrl = urls[1].trim();
+            const fetchData = (url) =>
+                fetch(url, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${getCookie('access_token')}`,
+                        'Content-Type': 'application/json'
+                    }
+                }).then((res) => res.json());
+
+            fetchData(tableApiUrl)
+                .then((data) => {
+                    const container = $('#transactions-container');
+                    container.empty();
+
+                    data.forEach((transaction, index) => {
+                        const formattedDate = formatTimestamp(transaction.timestamp);
+                        const card = `
+                            <div class="bg-white shadow-md rounded-lg p-2 mb-2 border-l-4 ${index % 2 === 0 ? 'border-teal-700' : 'border-yellow-700'} border border-gray-400">
+                                <p class="text-sm"><strong class="text-teal-600">Solicitado:</strong> ${transaction.required}</p>
+                                <p class="text-sm"><strong class="text-teal-600">Fecha:</strong> ${formattedDate}</p>
+                                <p class="text-sm"><strong class="text-teal-600">Tipo de Transacción:</strong> ${transaction.transaction_type === 1 ? 'Depósito' : 'Retiro'}</p>
+                                <p class="text-sm"><strong class="text-teal-600">Cantidad:</strong> Gs ${parseFloat(transaction.amount).toLocaleString("es-PY")}</p>
+                            </div>
+                        `;
+                        container.append(card);
+                    });
+
+                    return fetchData(balanceApiUrl);
+                })
+                .then((balanceData) => {
+                    const container = $('#transactions-container');
+                    const balanceCard = `
+                        <div class="bg-teal-100 shadow-md rounded-lg p-2 border border-teal-700">
+                            <h3 class="text-right font-bold text-sm text-teal-700">Saldo Actual</h3>
+                            <p class="text-right text-lg font-mono text-teal-900">Gs ${parseFloat(balanceData.balance).toLocaleString("es-PY")}</p>
+                        </div>
+                    `;
+                    container.append(balanceCard);
+                })
+                .catch((error) => console.error('Error al cargar los datos:', error));
+        };
+    });
+</script>
+{% endblock %}

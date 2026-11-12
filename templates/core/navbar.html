@@ -1,0 +1,64 @@
+{% load static %}
+<link href="https://fonts.googleapis.com/css2?family=Nexa:wght@400;700&display=swap" rel="stylesheet">
+
+<nav class="relative bg-gradient-to-r from-yellow-300 via-yellow-600 to-yellow-300 shadow-lg text-white">
+    <!-- Imagen de Fondo -->
+    <div class="absolute inset-0">
+        <div 
+            class="h-full w-full"
+            style="background: url('{% static "img/wp-1.jpg" %}') center center / cover no-repeat; opacity: 0.1;">
+        </div>
+    </div>
+
+    <!-- Contenedor con el degradado más fuerte -->
+    <div class="relative container mx-auto flex items-center justify-between px-6 py-4">
+        <!-- Logo y Título -->
+        <div class="flex items-center space-x-4">
+            <img src="{% static 'img/logo.png' %}" alt="BNF Logo" class="h-20 mx-auto mb-4">
+            <!-- Nombre del Banco -->
+            <span class="font-semibold text-2xl tracking-wide" style="font-family: 'Nexa', sans-serif;">Banco Nacional de Fomento</span>
+        </div>
+
+        <!-- Botón Menú (Mobile) -->
+        <div class="block lg:hidden">
+            <button class="flex items-center px-3 py-2 border rounded text-white hover:text-yellow-100 hover:border-yellow-300">
+                <svg class="fill-current h-5 w-5" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                    <title>Menu</title>
+                    <path d="M0 3h20v2H0V3zm0 6h20v2H0V9zm0 6h20v2H0v-2z" />
+                </svg>
+            </button>
+        </div>
+
+        <!-- Menú de Navegación -->
+        <div class="hidden lg:flex space-x-8">
+            {% if request.user.is_authenticated %}
+                <a href="{% url 'transactions:transaction_report' %}" class="text-white hover:text-yellow-100 transition duration-200 font-medium" style="font-family: 'Nexa', sans-serif;">
+                    Inicio
+                </a>
+                <a href="{% url 'transactions:deposit_money' %}" class="text-white hover:text-yellow-100 transition duration-200 font-medium" style="font-family: 'Nexa', sans-serif;">
+                    Depósito
+                </a>
+                <a href="{% url 'transactions:withdraw_money' %}" class="text-white hover:text-yellow-100 transition duration-200 font-medium" style="font-family: 'Nexa', sans-serif;">
+                    Retirar
+                </a>
+            {% else %}
+                <a href="{% url 'accounts:user_login' %}" class="text-white hover:text-yellow-100 transition duration-200 font-medium" style="font-family: 'Nexa', sans-serif;">
+                    Acceder
+                </a>
+                <a href="{% url 'accounts:user_registration' %}" class="text-white hover:text-yellow-100 transition duration-200 font-medium" style="font-family: 'Nexa', sans-serif;">
+                    Registrar
+                </a>
+            {% endif %}
+        </div>
+
+        <!-- Información del Usuario -->
+        {% if request.user.is_authenticated %}
+        <div class="hidden lg:flex items-center space-x-4">
+            <span class="text-yellow-100 font-medium" style="font-family: 'Nexa', sans-serif;">Bienvenido, {{ request.user.first_name }} {{ request.user.last_name }}!</span>
+            <a href="{% url 'accounts:user_logout' %}" class="px-4 py-2 bg-yellow-700 hover:bg-yellow-800 text-white rounded shadow transition duration-200 font-medium" style="font-family: 'Nexa', sans-serif;">
+                Cerrar sesión
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</nav>

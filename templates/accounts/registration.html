@@ -1,0 +1,231 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block head_title %}Banking System{% endblock %}
+
+{% block head_extra %}
+<style>
+    .registration-background {
+        background-image: url('{% static "img/building-background.jpg" %}');
+        background-size: cover;
+        background-position: center;
+        
+    }
+    .overlay {
+        background: linear-gradient(rgba(52, 58, 64, 0.9), rgba(52, 58, 64, 0.9));
+    }
+    .register-button {
+        background-color: #2F7E7C;
+    }
+    .register-button:hover {
+        background-color: #256663;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="min-h-screen flex registration-background">
+    <!-- Parte Izquierda: Imagen y Mensaje -->
+    <div class="hidden md:flex md:w-1/2 overlay items-center justify-center p-8">
+        <div class="text-center">
+            <img src="{% static 'img/logo.png' %}" alt="BNF Logo" class="h-20 mx-auto mb-4">
+            <h2 class="text-white text-xl">Únete al BNF y comienza a disfrutar de nuestros servicios.</h2>
+        </div>
+    </div>
+
+    <!-- Parte Derecha: Formulario de Registro -->
+    <div class="w-full md:w-1/2 bg-white flex items-center justify-center p-8">
+        <div class="w-full max-w-2xl">
+            {% if registration_form.non_field_errors %}
+                {% for error in registration_form.non_field_errors %}
+                <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4">
+                    <p class="font-bold">Error</p>
+                    <p>{{ error }}</p>
+                </div>
+                {% endfor %}
+            {% endif %}
+
+            {% if address_form.non_field_errors %}
+                {% for error in address_form.non_field_errors %}
+                <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4">
+                    <p class="font-bold">Error</p>
+                    <p>{{ error }}</p>
+                </div>
+                {% endfor %}
+            {% endif %}
+
+            <h1 class="font-mono font-bold text-3xl text-center pb-5">Registrar</h1>
+
+            <form method="post" class="space-y-6">
+                {% csrf_token %}
+                {% for hidden_field in registration_form.hidden_fields %}
+                    {{ hidden_field.errors }}
+                    {{ hidden_field }}
+                {% endfor %}
+
+                <!-- Campos del Formulario -->
+                <div class="space-y-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">
+                                {{ registration_form.first_name.label }}
+                            </label>
+                            {{ registration_form.first_name }}
+                            {% if registration_form.first_name.errors %}
+                                {% for error in registration_form.first_name.errors %}
+                                <p class="text-red-600 text-sm italic">{{ error }}</p>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">
+                                {{ registration_form.last_name.label }}
+                            </label>
+                            {{ registration_form.last_name }}
+                            {% if registration_form.last_name.errors %}
+                                {% for error in registration_form.last_name.errors %}
+                                <p class="text-red-600 text-sm italic">{{ error }}</p>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">
+                                {{ registration_form.email.label }}
+                            </label>
+                            {{ registration_form.email }}
+                            {% if registration_form.email.errors %}
+                                {% for error in registration_form.email.errors %}
+                                <p class="text-red-600 text-sm italic">{{ error }}</p>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">
+                                {{ registration_form.account_type.label }}
+                            </label>
+                            {{ registration_form.account_type }}
+                            {% if registration_form.account_type.errors %}
+                                {% for error in registration_form.account_type.errors %}
+                                <p class="text-red-600 text-sm italic">{{ error }}</p>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">
+                                {{ registration_form.gender.label }}
+                            </label>
+                            {{ registration_form.gender }}
+                            {% if registration_form.gender.errors %}
+                                {% for error in registration_form.gender.errors %}
+                                <p class="text-red-600 text-sm italic">{{ error }}</p>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">
+                                {{ registration_form.birth_date.label }}
+                            </label>
+                            {{ registration_form.birth_date }}
+                            {% if registration_form.birth_date.errors %}
+                                {% for error in registration_form.birth_date.errors %}
+                                <p class="text-red-600 text-sm italic">{{ error }}</p>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">
+                                {{ registration_form.password1.label }}
+                            </label>
+                            {{ registration_form.password1 }}
+                            {% if registration_form.password1.errors %}
+                                {% for error in registration_form.password1.errors %}
+                                <p class="text-red-600 text-sm italic">{{ error }}</p>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">
+                                {{ registration_form.password2.label }}
+                            </label>
+                            {{ registration_form.password2 }}
+                            {% if registration_form.password2.errors %}
+                                {% for error in registration_form.password2.errors %}
+                                <p class="text-red-600 text-sm italic">{{ error }}</p>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Campos de Dirección -->
+                <div class="space-y-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">
+                                {{ address_form.street_address.label }}
+                            </label>
+                            {{ address_form.street_address }}
+                            {% if address_form.street_address.errors %}
+                                {% for error in address_form.street_address.errors %}
+                                <p class="text-red-600 text-sm italic">{{ error }}</p>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">
+                                {{ address_form.city.label }}
+                            </label>
+                            {{ address_form.city }}
+                            {% if address_form.city.errors %}
+                                {% for error in address_form.city.errors %}
+                                <p class="text-red-600 text-sm italic">{{ error }}</p>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">
+                                {{ address_form.postal_code.label }}
+                            </label>
+                            {{ address_form.postal_code }}
+                            {% if address_form.postal_code.errors %}
+                                {% for error in address_form.postal_code.errors %}
+                                <p class="text-red-600 text-sm italic">{{ error }}</p>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">
+                                {{ address_form.country.label }}
+                            </label>
+                            {{ address_form.country }}
+                            {% if address_form.country.errors %}
+                                {% for error in address_form.country.errors %}
+                                <p class="text-red-600 text-sm italic">{{ error }}</p>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Botón de Registro -->
+                <button type="submit" 
+                        class="register-button w-full text-white py-2 px-4 rounded-md font-medium mt-6 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500">
+                    REGISTRAR
+                </button>
+            </form>
+
+            <div class="text-center text-gray-500 text-xs mt-8">
+                Versión 1.0.71
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
