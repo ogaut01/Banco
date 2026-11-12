@@ -4,7 +4,7 @@ Proyecto desarrollado para la cátedra de **Sistemas Distribuidos** (8vo Semestr
 
 ---
 
-## 🚀 Características Principales
+## Características Principales
 
 - **Gestión de Cuentas Bancarias**: Apertura de cuentas, asociación a entidades bancarias y cálculo de intereses según el tipo de cuenta.
 - **Cajero Multibanco Distribuido**: Capacidad de interactuar con nodos de diferentes bancos a través de servicios web REST, permitiendo operaciones interbancarias en red local o remota.
